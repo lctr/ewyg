@@ -1,6 +1,6 @@
 <script>
   import Editor from "@/components/Editor.svelte";
-  export let name;
+
 </script>
 
 <h1>Wyg</h1>

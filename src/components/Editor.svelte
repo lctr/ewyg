@@ -1,5 +1,5 @@
 <script>
-import Pane from './Pane.svelte';
+import Pane from './layout/Pane.svelte';
 import * as Wyg from "../../lib/wygweb.bundle";
 
 const Egg = new Wyg.Wyg();
@@ -32,44 +32,28 @@ const syntax = {title: "Tree", color: "green"};
 
 <div class="active-panes">
   <Pane {...editor}>
-    <textarea id="editing" 
+    <div id="editing" contenteditable="true"
         on:keyup="{handleInput}" 
-        bind:value={INPUT} />
+        bind:innerHTML={INPUT} />
   </Pane>
 
   <Pane {...result}>{RESULT}</Pane>
     
-  <Pane {...syntax}>{AST}</Pane>
+  <Pane {...syntax}><pre>{AST}</pre></Pane>
 </div>
 
 <style>
 
-#editing,
-#highlighting,
-#highlighting * {
-  /* Also add text styles to highlighting tokens */
+#editing {
   font-size: 13pt;
   font-family: monospace;
   line-height: 20pt;
   width: 100%;
-}
-
-
-/* Move the textarea in front of the result */
-#editing {
   z-index: 1;
-}
-
-#highlighting {
-  z-index: 0;
-}
-
-/* Make textarea almost completely transparent */
-#editing {
-  /* color: transparent; */
+  outline: none;
   background: transparent;
   caret-color: red;
-  /* Or choose your favorite color */
+  text-align: left;
 }
 
 .error {

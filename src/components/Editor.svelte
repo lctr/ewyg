@@ -29,10 +29,10 @@ const editor = {title: "Editor", color: "blue"};
 const result = {title: "Result", color: "red"};
 const syntax = {title: "Tree", color: "green"};
 </script>
+
 <div class="active-panes">
   <Pane {...editor}>
-    <textarea 
-        id="editing" 
+    <textarea id="editing" 
         on:keyup="{handleInput}" 
         bind:value={INPUT} />
   </Pane>
@@ -41,6 +41,7 @@ const syntax = {title: "Tree", color: "green"};
     
   <Pane {...syntax}>{AST}</Pane>
 </div>
+
 <style>
 
 #editing,

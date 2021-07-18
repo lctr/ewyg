@@ -18,6 +18,7 @@
     {/if}
   </div>
 </div>
+
 <style>
 :root {
 	--blue1: #5e6771;
@@ -104,6 +105,9 @@ a:hover {
 	background-color: #f3f6f9;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
+  width: 98%;
+  height: 100%;
+  text-align: left;
 }
 
 .pane-content form div {

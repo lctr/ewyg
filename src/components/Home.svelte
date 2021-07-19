@@ -4,7 +4,7 @@
 </script>
 
 <h1>Wyg</h1>
-<p>Ah</p>
+
 <link
   href="https://fonts.googleapis.com/css?family=Roboto:100,400"
   rel="stylesheet"

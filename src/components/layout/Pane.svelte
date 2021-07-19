@@ -64,6 +64,9 @@
 	color: rgba(200, 200, 200, 0.75);
 	text-decoration: italic;
 	font-size: 13px;
+  cursor: grab;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 .pane-controls {

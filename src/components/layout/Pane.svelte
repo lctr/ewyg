@@ -1,12 +1,14 @@
 <script>
+  export let pos;
   export let title;
   export let color;
   export let label = " : : : ";
   let active = true;
   const toggle = () => active = !active;
+
 </script>
 
-<div class="pane-wrapper" data-color={color}>
+<div class={"pane-wrapper" + (pos ? ' pane-' + pos : '')} data-color={color}>
   <div class="pane-header">
       <div class="pane-title">{title}</div>
       <div class="pane-message">{label}</div>
@@ -32,13 +34,38 @@
 	--purple2: #79778d;
 }
 
+.blue1,
+.pane-wrapper[data-color='blue'] {
+	--bg-color: var(--blue1);
+}
+
+.red1,
+.pane-wrapper[data-color='red'] {
+	--bg-color: var(--red1);
+}
+
+.green1,
+.pane-wrapper[data-color='green'] {
+	--bg-color: var(--green1);
+}
+
+.purple1,
+.pane-wrapper[data-color='purple'] {
+	--bg-color: var(--purple1);
+}
+
 .pane-wrapper {
 	display: grid;
 	position: relative;
 	border-radius: 5px;
-	border: 1px solid;
+	border: 1px solid var(--bg-color);
 	box-shadow: 0 5px 8px -5px rgba(40, 40, 55, 0.65);
 	grid-template-rows: 25px 1fr;
+}
+
+.pane-left, .pane-right {
+  width: 48%;
+  height: 80vh;
 }
 
 .pane-header {
@@ -111,6 +138,7 @@ a:hover {
   width: 98%;
   height: 100%;
   text-align: left;
+  justify-content: space-evenly;
 }
 
 .pane-content form div {

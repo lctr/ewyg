@@ -1,6 +1,7 @@
-import App from "./App.svelte";
+import App from './App.svelte';
 
 const app = new App({
-  target: document.querySelector("#__snel"),
-  props: {},
+  target: document.body
 });
+
+export default app;

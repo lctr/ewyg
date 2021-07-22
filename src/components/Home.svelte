@@ -1,20 +1,24 @@
 <script>
-  import Editor from "./Editor.svelte";
-
+  import Editor from "./text/Editor.svelte";
+  import Topbar from "./layout/Topbar.svelte";
 </script>
-
-<h1>Wyg</h1>
+<Topbar>
+  <h1>Wyg</h1>
 
 <link
   href="https://fonts.googleapis.com/css?family=Roboto:100,400"
   rel="stylesheet"
 />
+</Topbar>
+
+
+
 <Editor />
 
 <style>
   h1 {
-    color: #ff3e00;
-    font-size: 4em;
+    color: #f2f2f2;
+    font-size: 2.25em;
     font-weight: 100;
   }
 </style>

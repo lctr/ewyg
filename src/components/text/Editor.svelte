@@ -1,6 +1,7 @@
 <script>
-import Pane from './layout/Pane.svelte';
-import { Wyg } from "../../lib/wygweb.bundle";
+import Pane from '../layout/Pane.svelte';
+import Ast from './Ast.svelte';
+import { Wyg } from "../../../lib/wygweb.bundle";
 
 const Egg = new Wyg();
 const EMPTY = '· · ·';
@@ -11,7 +12,8 @@ let RESULT = EMPTY;
 let MESSAGE = EMPTY;
 let ERROR;
 let session; 
-const editor = { pos: "left", title: "Editor", color: "blue" };
+const editor = { pos: "left-1", title: "Editor", color: "blue" };
+const result = { pos: "left-2", title: "Result", color: "blue" }; 
 const syntax = { pos: "right", title: "Expression", color: "green" };
 
 function handleInput(e) {
@@ -36,7 +38,7 @@ function runInput() {
       ERROR = true;
       Egg.reset();
     } else {
-      AST = JSON.stringify(session.ast, null, 2);
+      AST = session.ast; // JSON.stringify(session.ast, null, 2);
       session.error = void 0;
       RESULT = session.value ?? EMPTY;
       syntax.color = "green";
@@ -54,38 +56,59 @@ function runInput() {
 </script>
 
 <div class="active-panes">
-  <Pane {...editor} style="display: flex;">
-    <div id="editing" 
-      contenteditable="true" 
-      data-placeholder={PLACEHOLDER}
-      on:keyup={handleInput} 
-      bind:textContent={INPUT}>
+  <div class="left-panes">
+    <Pane {...editor}>
+      <div id="editing" 
+        contenteditable="true" 
+        data-placeholder={PLACEHOLDER}
+        on:keyup={handleInput} 
+        bind:textContent={INPUT}>
 
-    </div>
+      </div>
+    </Pane>
+    <Pane {...result}>
+      <div id="result">
+        {#if ERROR }
+        <pre>&gt; {MESSAGE}</pre>
+        {:else}
+        <code>&gt; {RESULT}</code>
+        {/if}
+      </div>
+    </Pane>
 
-    <div id="result">
-      {#if ERROR }
-      <pre>&gt; {MESSAGE}</pre>
-      {:else}
-      <code>&gt; {RESULT}</code>
-      {/if}
-    </div>
-  </Pane>
+  </div>
+  
+ 
   <Pane {...syntax}>
-    <pre>{AST}</pre>
+    <div id="ast">
+      <!-- <code> -->
+        <Ast expr={AST} />
+      <!-- </code> -->
+    </div>
   </Pane>
+
+   
 </div>
 
 <style>
 
 .active-panes {
-	align-items: flex-start;
-	display: flex;
+  /* justify-content: center; */
+	display: grid;
 	/* flex: 2 1 auto; */
 	/* flex-direction: column; */
 	gap: 0.75em;
   justify-content: space-evenly;
 	margin-top: 0.75em;
+  width: 100%;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto;
+}
+
+.left-panes {
+  display: grid;
+  gap: 0.75em;
+  grid-template-rows: auto;
   width: 100%;
 }
 
@@ -101,15 +124,14 @@ function runInput() {
   font-size: 13pt;
   line-height: 20pt;
   /* line-height: 1.1; */
-  height: 80%;
+  /* height: 80%; */
   outline: none;
   text-align: left;
-  /* width: 100%; */
+  width: 100%;
   z-index: 1;
 }
 
 #result {
-  border-top: 1px solid #999;
   overflow-y: scroll;
   padding: 2px 0;
   width: 100%; 

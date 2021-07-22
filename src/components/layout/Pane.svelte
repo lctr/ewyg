@@ -63,9 +63,16 @@
 	grid-template-rows: 25px 1fr;
 }
 
-.pane-left, .pane-right {
-  width: 48%;
+.pane-right {
   height: 80vh;
+}
+
+.pane-left-1 {
+  height: 60vh;
+}
+
+.pane-left-2 {
+  height: minmax(30px, 18.70vh);
 }
 
 .pane-header {

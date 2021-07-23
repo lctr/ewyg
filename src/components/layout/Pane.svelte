@@ -86,7 +86,7 @@
 	grid-gap: 0;
 	color: #fff;
 	padding: 2px 4px;
-	font-size: 14px;
+	font-size: 16px;
 	align-items: center;
 	background-color: var(--bg-color);
 	justify-content: space-between;

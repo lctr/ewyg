@@ -7,7 +7,11 @@ import {
 
 const Egg = new Wyg();
 const EMPTY = '· · ·';
-let PLACEHOLDER = "Enter some Wyg code!";
+let PLACEHOLDER = 'Enter some Wyg code! ex: ' +  ` 
+factorial <- |n|\n
+  if n < 2 then 1\n
+  else n * factorial(n - 1);
+`;
 let INPUT;
 let AST = '';
 let RESULT = EMPTY;
@@ -33,7 +37,7 @@ const syntax = {
 };
 
 function focus(e) {
-  document.getElementById("editing").focus()
+  document.getElementById("editing").focus();
 }
 
 function handleInput(e) {
@@ -77,7 +81,7 @@ function runInput() {
     } else {
       AST = session.ast;
       session.error = void 0;
-      RESULT = session.value ? session.value : EMPTY;
+      RESULT =  session.value ? typeof session.value == 'function' ? `|lambda|` : session.value : EMPTY;
       syntax.color = "green";
       editor.color = "blue";
       ERROR = false;
@@ -153,8 +157,8 @@ function runInput() {
   background: transparent;
   caret-color: red;
   font-family: 'Menlo', monospace;
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 14px;
+  line-height: 20px;
   outline: none;
   text-align: left;
   width: 100%;

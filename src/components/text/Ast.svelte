@@ -48,7 +48,7 @@
 {:else if expr && typeof expr == 'object'}
   {#if 'type' in expr}
     <BodyToggle>
-      <code slot="title">
+      <code class={'wyg-type wyg-' + lower(expr.type)} slot="title">
         {proper(expr.type)}
       </code>
       <div slot="body">
@@ -87,25 +87,31 @@
 
 <style>
   :root {
-    --literal: blue;
-    --operator: red;
-    --position: green;
+    --literal: rgb(81, 81, 114);
+    --operator: rgb(141, 78, 78);
+    --position: rgb(102, 126, 105);
   }
-
+  .wyg-type {
+    letter-spacing: 1px;
+  }
   .key-l {
     /* background-color: red; */
-    padding-right: 2px;
+    padding-right: 4px;
   }
   .key-r {
-    padding-left: 2px;
+    padding-left: 4px;
     font-family: monospace;
+  }
+
+  .wyg-args {
+    font-style: italic;
   }
 
   .wyg-operator {
     color: var(--operator);
   }
   .wyg-position {
-    color: var(--green);
+    color: var(--position);
   }
 
   .wyg-position::before {
@@ -123,14 +129,31 @@
     content: "\""
   }
 
+  .wyg-block, .wyg-condition {
+    color: var(--green1);
+  }
+
+  .wyg-lambda, .wyg-variable, .wyg-vector {
+    color:var(--purple1);
+  }
+
+  .wyg-binary, .wyg-unary, .wyg-assign {
+    color:var(--blue1);
+  }
+
+  .wyg-call, .wyg-index {
+    color:var(--red1);
+  }
+
+  .wyg-sym, .wyg-str, .wyg-num {
+    color:var(--green2);
+  }
+
+
   .row {
     display: grid;
     grid-template-columns: auto 1fr;
     justify-content: baseline;
-    padding: 0;
-  }
-  
-  .array {
     padding: 0;
   }
 

@@ -1,20 +1,18 @@
 <script>
   import { slide } from "svelte/transition";
-  export let titleClass;
-  export let bodyClass;
 	let shown = true;
 	function toggle(e) {
 		shown = !shown;
 	}
-  $: shownCl = [titleClass, 'shown'].join(' ');
-  $: hiddenCl = [titleClass, 'hidden'].join(' ');
+  $: shownCl = 'shown';
+  $: hiddenCl = 'hidden';
 </script>
 <div class="container">
 	<div class={shown ? shownCl : hiddenCl} on:click={toggle} >
 		<slot name="title"></slot>
 	</div>
 	{#if shown}
-    <div class={bodyClass} transition:slide>
+    <div transition:slide>
       <slot name="body"></slot>
     </div>
 	{/if}

@@ -89,6 +89,11 @@ body {
 	box-sizing: border-box;
 }
 
+pre,
+code {
+	font-family: 'Menlo', monospace;
+}
+
 input,
 select,
 option {
@@ -273,17 +278,6 @@ a:hover {
 	align-items: center;
 	justify-content: space-evenly;
 	gap: 0.75em;
-}
-
-table#lexicalEntries {
-	table-layout: fixed;
-	width: 99%;
-	border-collapse: collapse;
-	border: none;
-}
-
-th {
-	text-align: left;
 }
 
 .loading-content {

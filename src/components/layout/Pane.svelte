@@ -4,11 +4,11 @@
   export let color;
   export let label = " : : : ";
   export let main;
+  $: cl = "pane-wrapper" + (pos ? ' pane-' + pos : '');
   let active = true;
   const toggle = () => active = !active;
   const onFocus = typeof main == 'function' ? main : () => {};
   
-  $: cl = "pane-wrapper" + (pos ? ' pane-' + pos : '');
 </script>
 
 <div class={cl} 
@@ -63,22 +63,23 @@
 	position: relative;
 	border-radius: 5px;
 	border: 1px solid var(--bg-color);
-	box-shadow: 0 5px 8px -5px rgba(40, 40, 55, 0.65);
+	box-shadow: 0 5px 10px -5px rgba(40, 40, 55, 0.65);
 	grid-template-rows: 25px 1fr;
 }
 
 .pane-right {
-  height: 80vh;
+  height: calc(100vh - 100px);
 }
 
-/* 
+
 .pane-left-1 {
-  height: 60vh;
+  /* min-height: calc(100% - 150px); */
 }
+
 
 .pane-left-2 {
-  height: minmax(30px, auto);
-} */
+  /* max-height: 100px; */
+}
 
 .pane-header {
 	display: flex;

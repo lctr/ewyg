@@ -3,22 +3,26 @@
   export let title;
   export let color;
   export let label = " : : : ";
+  export let main;
   let active = true;
   const toggle = () => active = !active;
-
+  const onFocus = typeof main == 'function' ? main : () => {};
+  
+  $: cl = "pane-wrapper" + (pos ? ' pane-' + pos : '');
 </script>
 
-<div class={"pane-wrapper" + (pos ? ' pane-' + pos : '')} data-color={color}>
+<div class={cl} 
+  data-color={color}>
   <div class="pane-header">
       <div class="pane-title">{title}</div>
       <div class="pane-message">{label}</div>
-      <div class="pane-controls" on:click="{toggle}">~~</div>
+      <div class="pane-controls" on:click|self="{toggle}">~~</div>
   </div>
-  <div class="pane-content">
-    {#if active}  
-    <slot></slot>
-    {/if}
-  </div>
+  {#if active}  
+    <div class="pane-content" on:click={onFocus}>
+      <slot></slot>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -67,13 +71,14 @@
   height: 80vh;
 }
 
+/* 
 .pane-left-1 {
   height: 60vh;
 }
 
 .pane-left-2 {
-  height: minmax(30px, 18.70vh);
-}
+  height: minmax(30px, auto);
+} */
 
 .pane-header {
 	display: flex;

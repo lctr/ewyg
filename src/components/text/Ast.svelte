@@ -2,14 +2,30 @@
   import BodyToggle from './BodyToggle.svelte';
   export let expr;
 
-  $: map = typeof expr == 'object' ? Object.entries(expr) : expr;
+  $: map = (expr && typeof expr == 'object') ? Object.entries(expr) : expr;
 
-  function sinTipo({type, ...rest}) {
+  function tail({type, ...rest}) {
     return { ...rest };
   }
 
+  function isAtomic(x) {
+    switch (typeof x) {
+      case 'number':
+      case 'string':
+      case 'boolean':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function lower(str) {
+    return str.toLowerCase()
+  };
+
   function proper (str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    return str.charAt(0).toUpperCase() +
+      str.slice(1).toLowerCase();
   }
 </script>
 
@@ -26,10 +42,10 @@
     </BodyToggle>
   </div>  
 
-{:else if !['object', 'null', 'undefined'].includes(typeof expr)} 
+{:else if isAtomic(expr)} 
   {expr}
 
-{:else if typeof expr == 'object'}
+{:else if expr && typeof expr == 'object'}
   {#if 'type' in expr}
     <BodyToggle>
       <code slot="title">
@@ -37,15 +53,13 @@
       </code>
       <div slot="body">
         <ul>
-          {#each Object.entries(sinTipo(expr)) as [k, v]}
+          {#each Object.entries(tail(expr)) as [k, v]}
             <li>
               <div class="row">
                 {#if k == 'position'} 
-                  {k}: <code class="key-r">({v.line}:{v.col})</code>
-                {:else if k == 'operator'}
-                  {k}: <code class="key-r wyg-operator">{v}</code>
-                {:else if k == 'literal'} 
-                  {k}: <code class="key-r wyg-literal">"{v}"</code>
+                  {k}: <code class="key-r wyg-position">{v.line}:{v.col}</code>
+                {:else if isAtomic(v)}
+                  {k}: <code class={`key-r wyg-${k}`}>{v}</code> 
                 {:else}
                 <div class="key-l">{k}: </div>
                 <div><svelte:self expr={v} /></div>
@@ -72,6 +86,11 @@
 {/if}
 
 <style>
+  :root {
+    --literal: blue;
+    --operator: red;
+    --position: green;
+  }
 
   .key-l {
     /* background-color: red; */
@@ -79,16 +98,38 @@
   }
   .key-r {
     padding-left: 2px;
+    font-family: monospace;
   }
-  .wyg-operator {}
-  .wyg-literal {}
+
+  .wyg-operator {
+    color: var(--operator);
+  }
+  .wyg-position {
+    color: var(--green);
+  }
+
+  .wyg-position::before {
+    content: "(";
+  } 
+  
+  .wyg-position::after {
+    content: ")";
+  }
+  .wyg-literal {
+    color: var(--literal);
+  }
+
+  .wyg-literal::before, .wyg-literal::after {
+    content: "\""
+  }
 
   .row {
     display: grid;
     grid-template-columns: auto 1fr;
     justify-content: baseline;
-
+    padding: 0;
   }
+  
   .array {
     padding: 0;
   }
@@ -97,12 +138,13 @@
   ul, ol {
     /* line-height: 80%; */
     list-style: none;
-    padding: 0.1rem;
+    padding: 0;
     padding-top: 0;
+    margin: 0;
   }
 
   li {
-    padding-left: 0.125rem;
+    padding-left: 0;
   }
   
 </style>

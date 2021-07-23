@@ -1,7 +1,9 @@
 <script>
 import Pane from '../layout/Pane.svelte';
 import Ast from './Ast.svelte';
-import { Wyg } from "../../../lib/wygweb.bundle";
+import {
+  Wyg
+} from "../../../lib/wygweb.bundle";
 
 const Egg = new Wyg();
 const EMPTY = '· · ·';
@@ -10,17 +12,50 @@ let INPUT;
 let AST = '';
 let RESULT = EMPTY;
 let MESSAGE = EMPTY;
+let TREE = '';
 let ERROR;
-let session; 
-const editor = { pos: "left-1", title: "Editor", color: "blue" };
-const result = { pos: "left-2", title: "Result", color: "blue" }; 
-const syntax = { pos: "right", title: "Expression", color: "green" };
+let session;
+const editor = {
+  pos: "left-1",
+  title: "Editor",
+  color: "blue",
+  main: focus
+};
+const result = {
+  pos: "left-2",
+  title: "Result",
+  color: "blue"
+};
+const syntax = {
+  pos: "right",
+  title: "Expression",
+  color: "green"
+};
+
+function focus(e) {
+  document.getElementById("editing").focus()
+}
 
 function handleInput(e) {
-  console.log(e);
-
-  if (INPUT && INPUT.length > 0) runInput();
+  // if (e.keyCode === 9) {
+  //   INPUT = INPUT + '\t';
+    
+  // } else 
   
+  if (INPUT && INPUT.length > 0) {
+    try {
+      runInput();
+
+      // setTimeout(() => {
+      //   throw new Error(`Process timed out!`);
+      // }, 10000);
+
+    } catch (e) {
+      MESSAGE = e;
+      ERROR = true;
+      Egg.reset();
+    }
+  }
 }
 
 function runInput() {
@@ -28,25 +63,26 @@ function runInput() {
     session = Egg.run(INPUT.replaceAll('&nbsp;', ''));
     if (session.error) {
       if (Egg.parseError) {
-        AST = Egg.parseError;
+        // AST = Egg.parseError;
         MESSAGE = 'Error parsing input!';
+        TREE = Egg.parseError;
       } else {
         MESSAGE = Egg.session.message;
+        TREE = { message: EMPTY };
       }
       syntax.color = "red";
       editor.color = "purple";
       ERROR = true;
       Egg.reset();
     } else {
-      AST = session.ast; // JSON.stringify(session.ast, null, 2);
+      AST = session.ast;
       session.error = void 0;
-      RESULT = session.value ?? EMPTY;
+      RESULT = session.value ? session.value : EMPTY;
       syntax.color = "green";
       editor.color = "blue";
       ERROR = false;
     }
   } catch (e) {
-    console.log(e);
     MESSAGE = e;
     ERROR = true;
     Egg.reset();
@@ -56,59 +92,55 @@ function runInput() {
 </script>
 
 <div class="active-panes">
-  <div class="left-panes">
-    <Pane {...editor}>
-      <div id="editing" 
-        contenteditable="true" 
-        data-placeholder={PLACEHOLDER}
-        on:keyup={handleInput} 
-        bind:textContent={INPUT}>
+    <div class="left-panes">
+        <Pane {...editor}>
+            <div id="editing"
+                contenteditable="true"
+                spellcheck="false"
+                data-placeholder={PLACEHOLDER}
+                on:keyup|preventDefault={handleInput}
+                on:click={focus}
+                bind:textContent={INPUT} />
+                </Pane>
+                <Pane {...result}>
+                    <div id="result">
+                        {#if ERROR }
+                        <pre>&gt; {MESSAGE}</pre>
+                        {:else}
+                        <code>&gt; {RESULT}</code>
+                        {/if}
+                    </div>
+                </Pane>
+            </div>
 
-      </div>
-    </Pane>
-    <Pane {...result}>
-      <div id="result">
-        {#if ERROR }
-        <pre>&gt; {MESSAGE}</pre>
-        {:else}
-        <code>&gt; {RESULT}</code>
-        {/if}
-      </div>
-    </Pane>
+            <Pane {...syntax}>
+                <div id="ast">
+                    {#if ERROR}
+                      <span class="error">{TREE.name}!</span>
+                      <pre>{TREE.message}</pre>
+                    {:else} 
+                      <Ast expr={AST} /> 
+                    {/if}
+                </div>
+            </Pane>
 
-  </div>
-  
- 
-  <Pane {...syntax}>
-    <div id="ast">
-      <!-- <code> -->
-        <Ast expr={AST} />
-      <!-- </code> -->
-    </div>
-  </Pane>
-
-   
-</div>
+            </div>
 
 <style>
-
 .active-panes {
-  /* justify-content: center; */
-	display: grid;
-	/* flex: 2 1 auto; */
-	/* flex-direction: column; */
-	gap: 0.75em;
+  display: grid;
+  gap: 0.75em;
   justify-content: space-evenly;
-	margin-top: 0.75em;
   width: 100%;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: auto;
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 1fr 1fr;
+  height: 80vh;
 }
 
 .left-panes {
   display: grid;
   gap: 0.75em;
-  grid-template-rows: auto;
+  grid-template-rows: auto 150px;
   width: 100%;
 }
 
@@ -120,36 +152,43 @@ function runInput() {
 #editing {
   background: transparent;
   caret-color: red;
-  font-family: monospace;
-  font-size: 13pt;
-  line-height: 20pt;
-  /* line-height: 1.1; */
-  /* height: 80%; */
+  font-family: 'Menlo', monospace;
+  font-size: 16px;
+  line-height: 18px;
   outline: none;
   text-align: left;
   width: 100%;
   z-index: 1;
+  margin-top: 2px;
+  color: #111;
 }
 
 #result {
   overflow-y: scroll;
-  padding: 2px 0;
-  width: 100%; 
+  padding: 0 0;
+  width: 100%;
 }
 
 .error {
   color: red;
+  padding: 0;
 }
 
 #ast {
   text-align: left;
+  margin-top: 2px;
 }
 
 pre {
-  white-space: pre-wrap;       /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;      /* Opera 4-6 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  white-space: pre-wrap;
+  /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;
+  /* Opera 4-6 */
+  white-space: -o-pre-wrap;
+  /* Opera 7 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
 }
 </style>
